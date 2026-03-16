@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scaled Factorial Product — AI Dev Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050508;
+  --bg2: #0a0a10;
+  --bg3: #0f0f18;
+  --surface: #12121e;
+  --border: #1a1a2e;
+  --border-h: #2a2a4e;
+  --text: #eeeef6;
+  --dim: #6e6e8a;
+  --muted: #3a3a55;
+  --elixir: #a855f7;
+  --elixir-g: rgba(168,85,247,0.35);
+  --ruby: #f43f5e;
+  --ruby-g: rgba(244,63,94,0.3);
+  --cyan: #22d3ee;
+  --cyan-g: rgba(34,211,238,0.25);
+  --gold: #fbbf24;
+  --green: #34d399;
+  --orange: #fb923c;
+  --white-g: rgba(255,255,255,0.06);
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-body: 'Instrument Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; cursor: none; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+a, button { cursor: none; }
+
+.cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  background: var(--elixir);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease, width 0.3s, height 0.3s, background 0.3s;
+}
+
+.cursor-ring {
+  position: fixed;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid rgba(168,85,247,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transition: width 0.4s ease, height 0.4s ease, border-color 0.4s;
+}
+
+.cursor.hover { width: 60px; height: 60px; background: rgba(168,85,247,0.15); mix-blend-mode: normal; }
+.cursor-ring.hover { width: 80px; height: 80px; border-color: var(--elixir); }
+
+#particleCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 99990;
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--elixir), var(--cyan), var(--ruby));
+  z-index: 100000;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 10000;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(5,5,8,0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+nav.scrolled { padding: 14px 48px; background: rgba(5,5,8,0.9); }
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.logo-symbol {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--elixir), var(--cyan));
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-symbol::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%,100% { transform: translateX(-100%) rotate(25deg); }
+  50% { transform: translateX(100%) rotate(25deg); }
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:not(.nav-cta):hover { color: var(--text); }
+
+.nav-cta {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--elixir), #7c3aed);
+  color: #fff !important;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 0 30px var(--elixir-g);
+}
+
+.nav-cta:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 0 50px var(--elixir-g);
+}
+
+.mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 8px;
+}
+
+.mobile-toggle span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+section { position: relative; z-index: 2; }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 80px;
+}
+
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.5;
+  animation: blobMorph 15s ease-in-out infinite;
+}
+
+.hero-blob-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(168,85,247,0.2), transparent 70%);
+  top: -10%; right: -10%;
+}
+
+.hero-blob-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(34,211,238,0.15), transparent 70%);
+  bottom: -15%; left: -10%;
+  animation-delay: -5s;
+}
+
+.hero-blob-3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(244,63,94,0.12), transparent 70%);
+  top: 30%; left: 40%;
+  animation-delay: -10s;
+}
+
+@keyframes blobMorph {
+  0%, 100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; transform: translate(0,0) rotate(0deg) scale(1); }
+  25% { border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%; transform: translate(20px,-30px) rotate(5deg) scale(1.05); }
+  50% { border-radius: 50% 50% 30% 70% / 60% 40% 60% 40%; transform: translate(-15px,20px) rotate(-3deg) scale(0.95); }
+  75% { border-radius: 30% 70% 60% 40% / 50% 50% 50% 50%; transform: translate(10px,15px) rotate(4deg) scale(1.02); }
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  background: rgba(168,85,247,0.08);
+  border: 1px solid rgba(168,85,247,0.2);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--elixir);
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: enterUp 1s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
+}
+
+.hero-badge .pulse-dot {
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  position: relative;
+}
+
+.hero-badge .pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--green);
+  animation: pingRing 2s cubic-bezier(0,0,0.2,1) infinite;
+}
+
+@keyframes pingRing {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 8vw, 100px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -4px;
+  margin-bottom: 32px;
+}
+
+.hero-line {
+  display: block;
+  opacity: 0;
+  animation: enterUp 1s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+.hero-line:nth-child(1) { animation-delay: 0.3s; }
+.hero-line:nth-child(2) { animation-delay: 0.5s; }
+.hero-line:nth-child(3) { animation-delay: 0.7s; }
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--elixir) 0%, var(--cyan) 50%, var(--ruby) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.hero-sub {
+  font-size: 20px;
+  color: var(--dim);
+  max-width: 580px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: enterUp 1s cubic-bezier(0.22,1,0.36,1) 0.9s forwards;
+}
+
+.hero-sub strong { color: var(--text); font-weight: 600; }
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  opacity: 0;
+  animation: enterUp 1s cubic-bezier(0.22,1,0.36,1) 1.1s forwards;
+}
+
+@keyframes enterUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-mag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 38px;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+  overflow: hidden;
+}
+
+.btn-mag .btn-text { position: relative; z-index: 2; }
+.btn-mag .btn-arrow { position: relative; z-index: 2; transition: transform 0.3s; }
+.btn-mag:hover .btn-arrow { transform: translateX(4px); }
+
+.btn-primary-mag {
+  background: linear-gradient(135deg, var(--elixir), #7c3aed);
+  color: #fff;
+  box-shadow: 0 4px 40px var(--elixir-g), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.btn-primary-mag::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #7c3aed, var(--elixir));
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.btn-primary-mag:hover::before { opacity: 1; }
+.btn-primary-mag:hover {
+  box-shadow: 0 8px 60px var(--elixir-g);
+}
+
+.btn-ghost-mag {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost-mag:hover {
+  border-color: var(--border-h);
+  background: var(--white-g);
+}
+
+.hero-visual {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 460px;
+  opacity: 0;
+  animation: enterRight 1.2s cubic-bezier(0.22,1,0.36,1) 1.3s forwards;
+  perspective: 1000px;
+}
+
+@keyframes enterRight {
+  from { opacity: 0; transform: translateY(-50%) translateX(80px) rotateY(-8deg); }
+  to { opacity: 1; transform: translateY(-50%) translateX(0) rotateY(0); }
+}
+
+.code-window {
+  background: rgba(10,10,16,0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 100px rgba(0,0,0,0.5), 0 0 80px rgba(168,85,247,0.06), inset 0 1px 0 rgba(255,255,255,0.04);
+  animation: codeFloat 8s ease-in-out infinite;
+}
+
+@keyframes codeFloat {
+  0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+  25% { transform: translateY(-8px) rotateX(1deg) rotateY(-1deg); }
+  75% { transform: translateY(8px) rotateX(-1deg) rotateY(1deg); }
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.cd { width: 12px; height: 12px; border-radius: 50%; }
+.cd-r { background: #ef4444; }
+.cd-y { background: #fbbf24; }
+.cd-g { background: #22c55e; }
+
+.code-tab {
+  margin-left: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--dim);
+  padding: 4px 14px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+}
+
+.code-body {
+  padding: 20px 22px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.9;
+}
+
+.cl { opacity: 0; animation: typeIn 0.4s ease forwards; }
+.cl:nth-child(1) { animation-delay: 1.5s; }
+.cl:nth-child(2) { animation-delay: 1.7s; }
+.cl:nth-child(3) { animation-delay: 1.9s; }
+.cl:nth-child(4) { animation-delay: 2.1s; }
+.cl:nth-child(5) { animation-delay: 2.3s; }
+.cl:nth-child(6) { animation-delay: 2.5s; }
+.cl:nth-child(7) { animation-delay: 2.7s; }
+.cl:nth-child(8) { animation-delay: 2.9s; }
+.cl:nth-child(9) { animation-delay: 3.1s; }
+.cl:nth-child(10) { animation-delay: 3.3s; }
+
+@keyframes typeIn {
+  from { opacity: 0; transform: translateX(-8px) scale(0.98); filter: blur(4px); }
+  to { opacity: 1; transform: translateX(0) scale(1); filter: blur(0); }
+}
+
+.kw { color: var(--elixir); }
+.fn { color: var(--cyan); }
+.str { color: var(--green); }
+.cm { color: var(--muted); }
+.at { color: var(--gold); }
+.op { color: var(--dim); }
+
+.marquee-wrap {
+  padding: 20px 0;
+  border-top: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  overflow: hidden;
+  background: rgba(10,10,16,0.5);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 50px;
+  width: max-content;
+  animation: mscroll 25s linear infinite;
+}
+
+.marquee-item {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: color 0.3s;
+}
+
+.marquee-item:hover { color: var(--text); }
+
+.m-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.m-elixir { background: var(--elixir); }
+.m-ruby { background: var(--ruby); }
+.m-cyan { background: var(--cyan); }
+.m-gold { background: var(--gold); }
+.m-green { background: var(--green); }
+.m-orange { background: var(--orange); }
+
+@keyframes mscroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.stats-section {
+  padding: 80px 0;
+  background: var(--bg2);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.stat-cell {
+  background: var(--bg2);
+  padding: 48px 32px;
+  text-align: center;
+  transition: background 0.4s;
+}
+
+.stat-cell:hover { background: var(--bg3); }
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-num.clr-1 { color: var(--elixir); }
+.stat-num.clr-2 { color: var(--cyan); }
+.stat-num.clr-3 { color: var(--gold); }
+.stat-num.clr-4 { color: var(--green); }
+
+.stat-lbl { font-size: 14px; color: var(--dim); font-weight: 500; }
+
+.sec-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--elixir);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sec-label::before { content: ''; width: 32px; height: 1px; background: var(--elixir); }
+
+.sec-title {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -2.5px;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+
+.sec-desc {
+  font-size: 18px;
+  color: var(--dim);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.tech-section { padding: 160px 0; }
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 80px;
+}
+
+.tech-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 44px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+.tech-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+  border-radius: inherit;
+}
+
+.tech-card.card-elixir::before { background: radial-gradient(ellipse at top left, rgba(168,85,247,0.1), transparent 60%); }
+.tech-card.card-ruby::before { background: radial-gradient(ellipse at top left, rgba(244,63,94,0.1), transparent 60%); }
+.tech-card.card-rn::before { background: radial-gradient(ellipse at top left, rgba(34,211,238,0.1), transparent 60%); }
+
+.tech-card:hover {
+  border-color: var(--border-h);
+  transform: translateY(-8px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+}
+
+.tech-card:hover::before { opacity: 1; }
+
+.tech-card-inner { position: relative; z-index: 1; }
+
+.tech-icon-wrap {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.card-elixir .tech-icon-wrap { background: rgba(168,85,247,0.12); }
+.card-ruby .tech-icon-wrap { background: rgba(244,63,94,0.12); }
+.card-rn .tech-icon-wrap { background: rgba(34,211,238,0.12); }
+
+.tech-icon-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 22px;
+  filter: blur(16px);
+  opacity: 0.4;
+}
+
+.card-elixir .tech-icon-wrap::after { background: var(--elixir); }
+.card-ruby .tech-icon-wrap::after { background: var(--ruby); }
+.card-rn .tech-icon-wrap::after { background: var(--cyan); }
+
+.tech-card h3 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.tech-card p {
+  color: var(--dim);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tag {
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid;
+  transition: all 0.3s;
+}
+
+.tag:hover { transform: translateY(-2px); }
+
+.t-elixir { color: var(--elixir); border-color: rgba(168,85,247,0.25); background: rgba(168,85,247,0.06); }
+.t-phoenix { color: var(--gold); border-color: rgba(251,191,36,0.25); background: rgba(251,191,36,0.06); }
+.t-liveview { color: #c4b5fd; border-color: rgba(196,181,253,0.25); background: rgba(196,181,253,0.06); }
+.t-ruby { color: var(--ruby); border-color: rgba(244,63,94,0.25); background: rgba(244,63,94,0.06); }
+.t-rails { color: #ef4444; border-color: rgba(239,68,68,0.25); background: rgba(239,68,68,0.06); }
+.t-hotwire { color: var(--orange); border-color: rgba(251,146,60,0.25); background: rgba(251,146,60,0.06); }
+.t-stimulus { color: var(--green); border-color: rgba(52,211,153,0.25); background: rgba(52,211,153,0.06); }
+.t-react { color: var(--cyan); border-color: rgba(34,211,238,0.25); background: rgba(34,211,238,0.06); }
+.t-rn { color: #818cf8; border-color: rgba(129,140,248,0.25); background: rgba(129,140,248,0.06); }
+
+/* ═══════ AI POWERHOUSE SECTION ═══════ */
+.ai-section {
+  padding: 160px 0;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--elixir), var(--cyan), var(--ruby), transparent);
+}
+
+.ai-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--elixir), var(--cyan), var(--ruby), transparent);
+}
+
+#neuralCanvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.ai-section .container { position: relative; z-index: 2; }
+
+.ai-hero-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 80px;
+}
+
+.ai-terminal {
+  background: rgba(10,10,18,0.9);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 100px rgba(168,85,247,0.06);
+  position: relative;
+}
+
+.ai-terminal::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.3), transparent 40%, transparent 60%, rgba(34,211,238,0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.ai-term-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.02);
+}
+
+.ai-term-tab {
+  margin-left: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+  padding: 4px 14px;
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.15);
+  border-radius: 6px;
+}
+
+.ai-term-body {
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 2;
+  min-height: 320px;
+}
+
+.ai-term-line {
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+.ai-term-line.typed {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+
+.ai-term-line .prompt { color: var(--green); }
+.ai-term-line .cmd { color: var(--text); }
+.ai-term-line .flag { color: var(--gold); }
+.ai-term-line .url { color: var(--cyan); }
+.ai-term-line .comment { color: var(--muted); }
+.ai-term-line .success { color: var(--green); }
+.ai-term-line .key { color: var(--elixir); }
+.ai-term-line .val { color: var(--cyan); }
+.ai-term-line .output { color: var(--dim); }
+
+.ai-cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background: var(--green);
+  animation: cursorBlink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.ai-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+.ai-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+
+.ai-card:nth-child(1)::before { background: linear-gradient(90deg, var(--elixir), #c084fc); }
+.ai-card:nth-child(2)::before { background: linear-gradient(90deg, var(--cyan), #67e8f9); }
+.ai-card:nth-child(3)::before { background: linear-gradient(90deg, var(--gold), #fde68a); }
+.ai-card:nth-child(4)::before { background: linear-gradient(90deg, var(--green), #6ee7b7); }
+
+.ai-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.ai-card:nth-child(1)::after { background: radial-gradient(ellipse at 30% 20%, rgba(168,85,247,0.08), transparent 60%); }
+.ai-card:nth-child(2)::after { background: radial-gradient(ellipse at 30% 20%, rgba(34,211,238,0.08), transparent 60%); }
+.ai-card:nth-child(3)::after { background: radial-gradient(ellipse at 30% 20%, rgba(251,191,36,0.08), transparent 60%); }
+.ai-card:nth-child(4)::after { background: radial-gradient(ellipse at 30% 20%, rgba(52,211,153,0.08), transparent 60%); }
+
+.ai-card:hover {
+  border-color: var(--border-h);
+  transform: translateY(-8px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+}
+
+.ai-card:hover::before { transform: scaleX(1); }
+.ai-card:hover::after { opacity: 1; }
+
+.ai-card-inner { position: relative; z-index: 1; }
+
+.ai-card-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  margin-bottom: 22px;
+  position: relative;
+}
+
+.ai-card:nth-child(1) .ai-card-icon { background: rgba(168,85,247,0.12); }
+.ai-card:nth-child(2) .ai-card-icon { background: rgba(34,211,238,0.12); }
+.ai-card:nth-child(3) .ai-card-icon { background: rgba(251,191,36,0.12); }
+.ai-card:nth-child(4) .ai-card-icon { background: rgba(52,211,153,0.12); }
+
+.ai-card-icon::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 22px;
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.ai-card:nth-child(1) .ai-card-icon::after { background: var(--elixir); }
+.ai-card:nth-child(2) .ai-card-icon::after { background: var(--cyan); }
+.ai-card:nth-child(3) .ai-card-icon::after { background: var(--gold); }
+.ai-card:nth-child(4) .ai-card-icon::after { background: var(--green); }
+
+.ai-card:hover .ai-card-icon::after { opacity: 0.35; }
+
+.ai-card h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.ai-card p {
+  color: var(--dim);
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.ai-tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.ai-tag {
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.ai-tag.t-api { color: var(--elixir); border-color: rgba(168,85,247,0.2); background: rgba(168,85,247,0.05); }
+.ai-tag.t-agent { color: var(--cyan); border-color: rgba(34,211,238,0.2); background: rgba(34,211,238,0.05); }
+.ai-tag.t-mcp { color: var(--gold); border-color: rgba(251,191,36,0.2); background: rgba(251,191,36,0.05); }
+.ai-tag.t-skill { color: var(--green); border-color: rgba(52,211,153,0.2); background: rgba(52,211,153,0.05); }
+.ai-tag.t-llm { color: var(--ruby); border-color: rgba(244,63,94,0.2); background: rgba(244,63,94,0.05); }
+.ai-tag.t-rag { color: var(--orange); border-color: rgba(251,146,60,0.2); background: rgba(251,146,60,0.05); }
+
+.ai-cap-wrap {
+  overflow: hidden;
+  padding: 20px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+.ai-capabilities {
+  display: flex;
+  gap: 12px;
+  animation: aiScroll 40s linear infinite;
+  width: max-content;
+}
+
+.ai-cap-item {
+  padding: 12px 24px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--dim);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.ai-cap-item:hover {
+  color: var(--text);
+  border-color: var(--border-h);
+  background: var(--bg3);
+}
+
+.ai-cap-icon { font-size: 16px; }
+
+@keyframes aiScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.services-section {
+  padding: 160px 0;
+  background: var(--bg2);
+  border-top: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 80px;
+}
+
+.svc-card {
+  padding: 40px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg);
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+  position: relative;
+  overflow: hidden;
+}
+
+.svc-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--elixir), var(--cyan));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+.svc-card:hover {
+  border-color: var(--border-h);
+  transform: translateY(-6px);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+}
+
+.svc-card:hover::after { transform: scaleX(1); }
+
+.svc-icon {
+  font-size: 36px;
+  margin-bottom: 22px;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+
+.svc-card:hover .svc-icon { transform: scale(1.15) rotate(-5deg); }
+
+.svc-card h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.svc-card p { color: var(--dim); font-size: 14px; line-height: 1.7; }
+
+.portfolio-section { padding: 160px 0; }
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-top: 80px;
+}
+
+.proj-card {
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--bg2);
+  transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.proj-card:hover {
+  border-color: var(--border-h);
+  transform: translateY(-10px) scale(1.01);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.45), 0 0 60px rgba(168,85,247,0.05);
+}
+
+.proj-visual {
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.proj-visual-inner {
+  width: 100%; height: 100%;
+  display: grid;
+  place-items: center;
+  position: relative;
+  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+
+.proj-card:hover .proj-visual-inner { transform: scale(1.05); }
+
+.proj-texas .proj-visual-inner { background: linear-gradient(145deg, #0c0c1d 0%, #1a1035 40%, #15102e 100%); }
+.proj-papereg .proj-visual-inner { background: linear-gradient(145deg, #050f08 0%, #0d2818 40%, #081f10 100%); }
+
+.proj-mesh {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image:
+    linear-gradient(rgba(168,85,247,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168,85,247,0.3) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: meshDrift 20s linear infinite;
+}
+
+.proj-papereg .proj-mesh {
+  background-image:
+    linear-gradient(rgba(34,211,238,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238,0.3) 1px, transparent 1px);
+}
+
+@keyframes meshDrift { from { transform: translate(0,0); } to { transform: translate(40px, 40px); } }
+
+.proj-domain {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  position: relative;
+  z-index: 2;
+}
+
+.proj-texas .proj-domain { color: #fff; text-shadow: 0 0 40px rgba(168,85,247,0.5), 0 0 80px rgba(168,85,247,0.2); }
+.proj-papereg .proj-domain { color: #fff; text-shadow: 0 0 40px rgba(34,211,238,0.5), 0 0 80px rgba(34,211,238,0.2); }
+
+.proj-orb {
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: orbPulse 6s ease-in-out infinite;
+}
+
+.proj-texas .proj-orb { background: rgba(168,85,247,0.25); }
+.proj-papereg .proj-orb { background: rgba(34,211,238,0.2); }
+
+@keyframes orbPulse {
+  0%,100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+.proj-live {
+  position: absolute;
+  top: 18px; right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--green);
+  z-index: 3;
+  border: 1px solid rgba(52,211,153,0.15);
+}
+
+.proj-live-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.proj-info { padding: 36px; }
+
+.proj-info h3 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.proj-url {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--elixir);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.proj-url-arrow { transition: transform 0.3s; font-size: 11px; }
+.proj-card:hover .proj-url-arrow { transform: translate(3px, -3px); }
+
+.proj-info p { color: var(--dim); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+
+.proj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.proj-tag {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(255,255,255,0.04);
+  color: var(--dim);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.3s;
+}
+
+.proj-card:hover .proj-tag { border-color: rgba(255,255,255,0.1); color: var(--text); }
+
+.why-section {
+  padding: 160px 0;
+  background: var(--bg2);
+  border-top: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 80px;
+}
+
+.why-card {
+  display: flex;
+  gap: 24px;
+  padding: 36px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+
+.why-card:hover {
+  background: var(--bg);
+  border-color: var(--border);
+  transform: translateX(8px);
+}
+
+.why-num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--elixir);
+  font-weight: 700;
+  width: 48px; height: 48px;
+  display: grid;
+  place-items: center;
+  background: rgba(168,85,247,0.08);
+  border: 1px solid rgba(168,85,247,0.15);
+  border-radius: 14px;
+  flex-shrink: 0;
+  transition: all 0.4s;
+}
+
+.why-card:hover .why-num {
+  background: rgba(168,85,247,0.15);
+  box-shadow: 0 0 30px rgba(168,85,247,0.15);
+}
+
+.why-card h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.why-card p { color: var(--dim); font-size: 14px; line-height: 1.7; }
+
+.cta-section {
+  padding: 200px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-blob {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 60%);
+  border-radius: 50%;
+  animation: ctaPulse 6s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50% { transform: translate(-50%,-50%) scale(1.15); }
+}
+
+.cta-content { position: relative; z-index: 2; }
+
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 6vw, 80px);
+  font-weight: 800;
+  letter-spacing: -3px;
+  line-height: 1;
+  margin-bottom: 24px;
+}
+
+.cta-desc {
+  color: var(--dim);
+  font-size: 19px;
+  max-width: 520px;
+  margin: 0 auto 52px;
+  line-height: 1.7;
+}
+
+.cta-actions { display: flex; gap: 16px; justify-content: center; }
+
+.glitch { position: relative; }
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch:hover::before {
+  animation: glitch1 0.3s ease;
+  color: var(--cyan);
+  opacity: 0.8;
+  z-index: -1;
+}
+
+.glitch:hover::after {
+  animation: glitch2 0.3s ease;
+  color: var(--ruby);
+  opacity: 0.8;
+  z-index: -1;
+}
+
+@keyframes glitch1 {
+  0% { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 2px); opacity: 0.8; }
+  25% { clip-path: inset(50% 0 20% 0); transform: translate(3px, -1px); }
+  50% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 3px); }
+  100% { clip-path: inset(0); transform: translate(0); opacity: 0; }
+}
+
+@keyframes glitch2 {
+  0% { clip-path: inset(60% 0 10% 0); transform: translate(3px, -2px); opacity: 0.8; }
+  25% { clip-path: inset(20% 0 50% 0); transform: translate(-3px, 1px); }
+  50% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -3px); }
+  100% { clip-path: inset(0); transform: translate(0); opacity: 0; }
+}
+
+footer {
+  padding: 48px 0;
+  border-top: 1px solid rgba(255,255,255,0.03);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copy { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+.footer-links { display: flex; gap: 28px; }
+
+.footer-links a {
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--text); }
+
+.rv {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.9s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+
+.rv.vis { opacity: 1; transform: translateY(0); }
+.rv-d1 { transition-delay: 0.1s; }
+.rv-d2 { transition-delay: 0.2s; }
+.rv-d3 { transition-delay: 0.3s; }
+.rv-d4 { transition-delay: 0.4s; }
+
+@media (max-width: 1100px) {
+  .hero-visual { display: none; }
+  .ai-hero-row { grid-template-columns: 1fr; }
+  .ai-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .tech-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .container { padding: 0 24px; }
+  nav { padding: 16px 24px; }
+  html, body, a, button { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+}
+
+@media (max-width: 700px) {
+  .mobile-toggle { display: flex; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    background: rgba(5,5,8,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 24px;
+    gap: 18px;
+  }
+  .nav-links.open { display: flex; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid { grid-template-columns: 1fr; }
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .ai-grid { grid-template-columns: 1fr; }
+  .hero-actions, .cta-actions { flex-direction: column; align-items: flex-start; }
+  .cta-actions { align-items: center; }
+  .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="particleCanvas"></canvas>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav id="navbar">
+  <a href="#" class="logo">
+    <div class="logo-symbol">n!</div>
+    ScaledFactorialProduct
+  </a>
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#tech">Stack</a></li>
+    <li><a href="#ai">AI</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#contact" class="nav-cta">Start a Project →</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-blob hero-blob-3"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Open for new projects — Q2 2026
+      </div>
+      <h1>
+        <span class="hero-line">Build fast.</span>
+        <span class="hero-line"><span class="gradient-text">Scale cheap.</span></span>
+        <span class="hero-line glitch" data-text="Ship yesterday.">Ship yesterday.</span>
+      </h1>
+      <p class="hero-sub">
+        <strong>AI-powered outsource development</strong> in Elixir, Ruby &amp; React Native.
+        Senior-grade systems at a fraction of the cost and timeline.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-mag btn-primary-mag">
+          <span class="btn-text">Get a Free Quote</span>
+          <span class="btn-arrow">→</span>
+        </a>
+        <a href="#portfolio" class="btn-mag btn-ghost-mag">
+          <span class="btn-text">View Our Work</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="code-window">
+      <div class="code-header">
+        <div class="cd cd-r"></div>
+        <div class="cd cd-y"></div>
+        <div class="cd cd-g"></div>
+        <div class="code-tab">live_engine.ex</div>
+      </div>
+      <div class="code-body">
+        <div class="cl"><span class="kw">defmodule</span> <span class="fn">Scaled.LiveEngine</span> <span class="kw">do</span></div>
+        <div class="cl">&nbsp;&nbsp;<span class="kw">use</span> <span class="fn">Phoenix.LiveView</span></div>
+        <div class="cl"></div>
+        <div class="cl">&nbsp;&nbsp;<span class="cm"># Ship 3x faster with AI</span></div>
+        <div class="cl">&nbsp;&nbsp;<span class="kw">def</span> <span class="fn">mount</span>(<span class="at">_p</span>, <span class="at">_s</span>, socket) <span class="kw">do</span></div>
+        <div class="cl">&nbsp;&nbsp;&nbsp;&nbsp;{<span class="at">:ok</span>, socket</div>
+        <div class="cl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">|></span> <span class="fn">assign</span>(<span class="at">:speed</span>, <span class="str">"3x"</span>)</div>
+        <div class="cl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">|></span> <span class="fn">assign</span>(<span class="at">:cost</span>, <span class="str">"-63%"</span>)</div>
+        <div class="cl">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">|></span> <span class="fn">stream_ai</span>(<span class="at">:deploy</span>)}</div>
+        <div class="cl">&nbsp;&nbsp;<span class="kw">end</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="m-dot m-elixir"></span>Elixir</span>
+    <span class="marquee-item"><span class="m-dot m-gold"></span>Phoenix</span>
+    <span class="marquee-item"><span class="m-dot m-elixir"></span>LiveView</span>
+    <span class="marquee-item"><span class="m-dot m-ruby"></span>Ruby</span>
+    <span class="marquee-item"><span class="m-dot m-ruby"></span>Ruby on Rails</span>
+    <span class="marquee-item"><span class="m-dot m-orange"></span>Hotwire</span>
+    <span class="marquee-item"><span class="m-dot m-green"></span>Stimulus</span>
+    <span class="marquee-item"><span class="m-dot m-cyan"></span>React</span>
+    <span class="marquee-item"><span class="m-dot m-cyan"></span>React Native</span>
+    <span class="marquee-item"><span class="m-dot m-elixir"></span>AI Integration</span>
+    <span class="marquee-item"><span class="m-dot m-gold"></span>PostgreSQL</span>
+    <span class="marquee-item"><span class="m-dot m-green"></span>WebSockets</span>
+    <span class="marquee-item"><span class="m-dot m-elixir"></span>Elixir</span>
+    <span class="marquee-item"><span class="m-dot m-gold"></span>Phoenix</span>
+    <span class="marquee-item"><span class="m-dot m-elixir"></span>LiveView</span>
+    <span class="marquee-item"><span class="m-dot m-ruby"></span>Ruby</span>
+    <span class="marquee-item"><span class="m-dot m-ruby"></span>Ruby on Rails</span>
+    <span class="marquee-item"><span class="m-dot m-orange"></span>Hotwire</span>
+    <span class="marquee-item"><span class="m-dot m-green"></span>Stimulus</span>
+    <span class="marquee-item"><span class="m-dot m-cyan"></span>React</span>
+    <span class="marquee-item"><span class="m-dot m-cyan"></span>React Native</span>
+    <span class="marquee-item"><span class="m-dot m-elixir"></span>AI Integration</span>
+    <span class="marquee-item"><span class="m-dot m-gold"></span>PostgreSQL</span>
+    <span class="marquee-item"><span class="m-dot m-green"></span>WebSockets</span>
+  </div>
+</div>
+
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-cell rv">
+        <div class="stat-num clr-1" data-target="63" data-suffix="%">0%</div>
+        <div class="stat-lbl">Cost Savings</div>
+      </div>
+      <div class="stat-cell rv rv-d1">
+        <div class="stat-num clr-2" data-target="3" data-suffix="×">0×</div>
+        <div class="stat-lbl">Faster Delivery</div>
+      </div>
+      <div class="stat-cell rv rv-d2">
+        <div class="stat-num clr-3" data-target="24" data-suffix="/7">0/7</div>
+        <div class="stat-lbl">Support</div>
+      </div>
+      <div class="stat-cell rv rv-d3">
+        <div class="stat-num clr-4" data-target="100" data-suffix="%">0%</div>
+        <div class="stat-lbl">On-Time</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tech-section" id="tech">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-label">Our Stack</div>
+      <h2 class="sec-title glitch" data-text="Three ecosystems. Zero filler.">Three ecosystems.<br>Zero filler.</h2>
+      <p class="sec-desc">We don't do everything — we master the three most productive stacks for building modern web and mobile products.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card card-elixir rv rv-d1">
+        <div class="tech-card-inner">
+          <div class="tech-icon-wrap">⚗️</div>
+          <h3>Elixir Ecosystem</h3>
+          <p>Fault-tolerant, massively concurrent systems. Phoenix LiveView delivers rich real-time UX with zero JavaScript overhead — dashboards, collaborative tools, and high-throughput APIs that never sleep.</p>
+          <div class="tag-row">
+            <span class="tag t-elixir">Elixir</span>
+            <span class="tag t-phoenix">Phoenix</span>
+            <span class="tag t-liveview">LiveView</span>
+          </div>
+        </div>
+      </div>
+      <div class="tech-card card-ruby rv rv-d2">
+        <div class="tech-card-inner">
+          <div class="tech-icon-wrap">💎</div>
+          <h3>Ruby Ecosystem</h3>
+          <p>From prototype to IPO. Rails with Hotwire for instant page updates, Stimulus for lightweight interactivity, and React when you need a rich client layer. Battle-tested, production-proven.</p>
+          <div class="tag-row">
+            <span class="tag t-ruby">Ruby</span>
+            <span class="tag t-rails">Rails</span>
+            <span class="tag t-hotwire">Hotwire</span>
+            <span class="tag t-stimulus">Stimulus</span>
+            <span class="tag t-react">React</span>
+          </div>
+        </div>
+      </div>
+      <div class="tech-card card-rn rv rv-d3">
+        <div class="tech-card-inner">
+          <div class="tech-icon-wrap">📱</div>
+          <h3>React Native</h3>
+          <p>One codebase, two platforms. Native iOS and Android apps that share logic with your web frontend. Fast iteration cycles, OTA updates, and native performance where it counts.</p>
+          <div class="tag-row">
+            <span class="tag t-react">React Native</span>
+            <span class="tag t-rn">iOS</span>
+            <span class="tag t-rn">Android</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ AI POWERHOUSE ═══════ -->
+<section class="ai-section" id="ai">
+  <canvas id="neuralCanvas"></canvas>
+  <div class="container">
+    <div class="ai-hero-row">
+      <div class="rv">
+        <div class="sec-label">AI-Native Development</div>
+        <h2 class="sec-title"><span class="gradient-text">We don't just use AI.</span><br>We build with it.</h2>
+        <p class="sec-desc" style="margin-bottom:32px;">Every project is supercharged with Claude API, autonomous agents, MCP integrations, and custom AI skills. Not as a gimmick — as core architecture.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span class="ai-tag t-api">Claude API</span>
+          <span class="ai-tag t-agent">AI Agents</span>
+          <span class="ai-tag t-mcp">MCP Protocol</span>
+          <span class="ai-tag t-skill">Custom Skills</span>
+          <span class="ai-tag t-llm">LLM Pipelines</span>
+          <span class="ai-tag t-rag">RAG Systems</span>
+        </div>
+      </div>
+      <div class="rv rv-d2">
+        <div class="ai-terminal">
+          <div class="ai-term-header">
+            <div class="cd cd-r"></div>
+            <div class="cd cd-y"></div>
+            <div class="cd cd-g"></div>
+            <div class="ai-term-tab">claude_agent.exs</div>
+          </div>
+          <div class="ai-term-body" id="aiTerminal">
+            <div class="ai-term-line"><span class="comment"># Deploying AI agent via MCP...</span></div>
+            <div class="ai-term-line"><span class="prompt">$</span> <span class="cmd">mix scaled.agent</span> <span class="flag">--model</span> <span class="val">claude-sonnet</span></div>
+            <div class="ai-term-line"><span class="output">→ Connecting to MCP server...</span></div>
+            <div class="ai-term-line"><span class="success">✓ MCP handshake complete</span></div>
+            <div class="ai-term-line"><span class="output">→ Loading skills: [code_review, deploy, test]</span></div>
+            <div class="ai-term-line"><span class="success">✓ 3 skills registered</span></div>
+            <div class="ai-term-line"><span class="output">→ Agent reasoning over context...</span></div>
+            <div class="ai-term-line"><span class="success">✓ Plan generated: 7 steps</span></div>
+            <div class="ai-term-line"><span class="output">→ Executing tool calls via Claude API...</span></div>
+            <div class="ai-term-line"><span class="success">✓ All tasks complete. Deployed to prod.</span></div>
+            <div class="ai-term-line"><span class="key">agent</span><span class="op">:</span> <span class="str">"Ready for next instruction"</span> <span class="ai-cursor-blink"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="ai-grid">
+      <div class="ai-card rv rv-d1">
+        <div class="ai-card-inner">
+          <div class="ai-card-icon">🧠</div>
+          <h3>Claude API</h3>
+          <p>Deep integration with Anthropic's Claude. Structured outputs, tool use, streaming responses, and multi-turn reasoning baked into your product.</p>
+          <div class="ai-tag-row">
+            <span class="ai-tag t-api">Sonnet</span>
+            <span class="ai-tag t-api">Opus</span>
+            <span class="ai-tag t-api">Haiku</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-card rv rv-d2">
+        <div class="ai-card-inner">
+          <div class="ai-card-icon">🤖</div>
+          <h3>AI Agents</h3>
+          <p>Autonomous agents that plan, reason, and execute multi-step workflows. Code review bots, deployment agents, customer support — all self-improving.</p>
+          <div class="ai-tag-row">
+            <span class="ai-tag t-agent">Autonomous</span>
+            <span class="ai-tag t-agent">Tool Use</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-card rv rv-d3">
+        <div class="ai-card-inner">
+          <div class="ai-card-icon">🔌</div>
+          <h3>MCP Protocol</h3>
+          <p>Model Context Protocol for seamless AI ↔ tool communication. Connect Claude to your databases, APIs, and internal systems with standardized interfaces.</p>
+          <div class="ai-tag-row">
+            <span class="ai-tag t-mcp">Servers</span>
+            <span class="ai-tag t-mcp">Tools</span>
+            <span class="ai-tag t-mcp">Resources</span>
+          </div>
+        </div>
+      </div>
+      <div class="ai-card rv rv-d4">
+        <div class="ai-card-inner">
+          <div class="ai-card-icon">⚡</div>
+          <h3>Custom Skills</h3>
+          <p>Reusable AI skill modules — code generation, document analysis, data extraction, image understanding — packaged and deployed as composable building blocks.</p>
+          <div class="ai-tag-row">
+            <span class="ai-tag t-skill">RAG</span>
+            <span class="ai-tag t-skill">Codegen</span>
+            <span class="ai-tag t-skill">Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="ai-cap-wrap">
+      <div class="ai-capabilities">
+        <div class="ai-cap-item"><span class="ai-cap-icon">🧠</span>Claude API Integration</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🤖</span>Autonomous AI Agents</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🔌</span>MCP Server Development</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">⚡</span>Custom AI Skills</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">📊</span>RAG Pipelines</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🔗</span>Tool Use & Function Calling</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">💬</span>Conversational UX</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">📝</span>Structured Outputs</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🔄</span>Streaming Responses</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🛡️</span>AI Safety & Guardrails</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">📦</span>Vector Databases</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🚀</span>AI-Powered Deployment</div>
+        <!-- duplicate -->
+        <div class="ai-cap-item"><span class="ai-cap-icon">🧠</span>Claude API Integration</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🤖</span>Autonomous AI Agents</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🔌</span>MCP Server Development</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">⚡</span>Custom AI Skills</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">📊</span>RAG Pipelines</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🔗</span>Tool Use & Function Calling</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">💬</span>Conversational UX</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">📝</span>Structured Outputs</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🔄</span>Streaming Responses</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🛡️</span>AI Safety & Guardrails</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">📦</span>Vector Databases</div>
+        <div class="ai-cap-item"><span class="ai-cap-icon">🚀</span>AI-Powered Deployment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services-section" id="services">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-label">Services</div>
+      <h2 class="sec-title">Full-cycle<br>outsource dev</h2>
+      <p class="sec-desc">From napkin sketch to production deploy. AI-augmented workflows mean senior output at outsource pricing.</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card rv rv-d1">
+        <span class="svc-icon">🚀</span>
+        <h3>MVP Sprint</h3>
+        <p>Concept to working product in weeks. We prototype, validate, and iterate with AI-assisted development at blistering speed.</p>
+      </div>
+      <div class="svc-card rv rv-d2">
+        <span class="svc-icon">⚡</span>
+        <h3>Real-Time Systems</h3>
+        <p>LiveView and Hotwire-powered apps with WebSocket UX. Dashboards, collaboration tools, live feeds that feel instant.</p>
+      </div>
+      <div class="svc-card rv rv-d3">
+        <span class="svc-icon">🤖</span>
+        <h3>AI Integration</h3>
+        <p>LLM features, intelligent automation, and AI-augmented workflows embedded into your product architecture from day one.</p>
+      </div>
+      <div class="svc-card rv rv-d1">
+        <span class="svc-icon">📱</span>
+        <h3>Mobile Apps</h3>
+        <p>Cross-platform React Native apps with shared business logic. Native performance, single codebase, rapid delivery.</p>
+      </div>
+      <div class="svc-card rv rv-d2">
+        <span class="svc-icon">🔧</span>
+        <h3>API &amp; Backend</h3>
+        <p>High-performance REST and GraphQL APIs. Microservices, database architecture, and infrastructure built for scale.</p>
+      </div>
+      <div class="svc-card rv rv-d3">
+        <span class="svc-icon">🛡️</span>
+        <h3>Scale &amp; Maintain</h3>
+        <p>Ongoing support, performance tuning, security audits, and infrastructure scaling as your user base explodes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="portfolio-section" id="portfolio">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-label">Portfolio</div>
+      <h2 class="sec-title glitch" data-text="Live. In production. Performing.">Live. In production.<br>Performing.</h2>
+      <p class="sec-desc">Real products generating real value — built on Elixir + Phoenix + LiveView.</p>
+    </div>
+    <div class="portfolio-grid">
+      <a class="proj-card proj-texas rv rv-d1" href="https://texas-heavy.com" target="_blank" rel="noopener">
+        <div class="proj-visual">
+          <div class="proj-visual-inner">
+            <div class="proj-mesh"></div>
+            <div class="proj-orb"></div>
+            <span class="proj-live"><span class="proj-live-dot"></span>LIVE</span>
+            <span class="proj-domain">texas-heavy.com</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <h3>Texas Heavy</h3>
+          <div class="proj-url">texas-heavy.com <span class="proj-url-arrow">↗</span></div>
+          <p>Heavy equipment &amp; machinery marketplace for the Texas industrial sector. Real-time listings, advanced search filters, dealer dashboards, and instant notifications — all powered by Phoenix LiveView.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">Elixir</span>
+            <span class="proj-tag">Phoenix</span>
+            <span class="proj-tag">LiveView</span>
+            <span class="proj-tag">PostgreSQL</span>
+            <span class="proj-tag">Tailwind CSS</span>
+          </div>
+        </div>
+      </a>
+      <a class="proj-card proj-papereg rv rv-d2" href="https://papereg.com" target="_blank" rel="noopener">
+        <div class="proj-visual">
+          <div class="proj-visual-inner">
+            <div class="proj-mesh"></div>
+            <div class="proj-orb"></div>
+            <span class="proj-live"><span class="proj-live-dot"></span>LIVE</span>
+            <span class="proj-domain">papereg.com</span>
+          </div>
+        </div>
+        <div class="proj-info">
+          <h3>PapeReg</h3>
+          <div class="proj-url">papereg.com <span class="proj-url-arrow">↗</span></div>
+          <p>Digital document registration &amp; compliance platform. Streamlined paperwork workflows, e-signatures, real-time status tracking, and automated compliance checks — built for speed and reliability with LiveView.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">Elixir</span>
+            <span class="proj-tag">Phoenix</span>
+            <span class="proj-tag">LiveView</span>
+            <span class="proj-tag">PostgreSQL</span>
+            <span class="proj-tag">Oban</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="why-section" id="why">
+  <div class="container">
+    <div class="rv">
+      <div class="sec-label">Why Us</div>
+      <h2 class="sec-title">Outsource quality,<br>without the drama</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card rv rv-d1">
+        <div class="why-num">01</div>
+        <div>
+          <h3>AI-Augmented Speed</h3>
+          <p>Our devs work with AI copilots to ship production code at 3× the velocity of traditional teams — no corners cut, no technical debt shortcuts.</p>
+        </div>
+      </div>
+      <div class="why-card rv rv-d2">
+        <div class="why-num">02</div>
+        <div>
+          <h3>Deep Specialization</h3>
+          <p>Not generalists. We live in Elixir/Phoenix, Ruby/Rails, and React Native. You get specialists who've seen every edge case.</p>
+        </div>
+      </div>
+      <div class="why-card rv rv-d3">
+        <div class="why-num">03</div>
+        <div>
+          <h3>Transparent Pricing</h3>
+          <p>Fixed-price sprints. No scope creep surprises. You know exactly what you pay before we write a single line of code.</p>
+        </div>
+      </div>
+      <div class="why-card rv rv-d4">
+        <div class="why-num">04</div>
+        <div>
+          <h3>Production-Grade</h3>
+          <p>Every deliverable is tested, documented, and deployment-ready. CI/CD pipelines, code review, and internal quality gates included.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <div class="cta-blob"></div>
+  <div class="container">
+    <div class="cta-content rv">
+      <div class="sec-label" style="justify-content:center;">Let's Build</div>
+      <h2 class="cta-title"><span class="gradient-text">Ready to ship?</span></h2>
+      <p class="cta-desc">Tell us about your project. Get a detailed estimate within 48 hours. No commitment, no fluff.</p>
+      <div class="cta-actions">
+        <a href="mailto:hello@scaledfactorialproduct.com" class="btn-mag btn-primary-mag">
+          <span class="btn-text">hello@scaledfactorialproduct.com</span>
+        </a>
+        <a href="#" class="btn-mag btn-ghost-mag">
+          <span class="btn-text">Book a Call</span>
+          <span class="btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-copy">© 2026 ScaledFactorialProduct — Built with ⚗️ + 💎 + 📱</div>
+      <div class="footer-links">
+        <a href="https://texas-heavy.com" target="_blank">texas-heavy.com</a>
+        <a href="https://papereg.com" target="_blank">papereg.com</a>
+        <a href="mailto:hello@scaledfactorialproduct.com">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ═══════ INTERACTIVE PARTICLE CONSTELLATION ═══════
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let mouse = { x: -1000, y: -1000 };
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4;
+    this.radius = Math.random() * 1.5 + 0.5;
+    this.baseAlpha = Math.random() * 0.4 + 0.1;
+    this.alpha = this.baseAlpha;
+    const colors = ['168,85,247', '34,211,238', '244,63,94', '251,191,36'];
+    this.color = colors[Math.floor(Math.random() * colors.length)];
+  }
+  update() {
+    const dx = mouse.x - this.x;
+    const dy = mouse.y - this.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 200) {
+      const force = (200 - dist) / 200;
+      this.vx -= (dx / dist) * force * 0.3;
+      this.vy -= (dy / dist) * force * 0.3;
+      this.alpha = this.baseAlpha + force * 0.5;
+    } else {
+      this.alpha += (this.baseAlpha - this.alpha) * 0.05;
+    }
+    this.vx *= 0.99;
+    this.vy *= 0.99;
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0) this.x = canvas.width;
+    if (this.x > canvas.width) this.x = 0;
+    if (this.y < 0) this.y = canvas.height;
+    if (this.y > canvas.height) this.y = 0;
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+const pCount = Math.min(120, Math.floor(window.innerWidth * 0.08));
+for (let i = 0; i < pCount; i++) particles.push(new Particle());
+
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 150) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(168,85,247,${(1 - dist/150) * 0.12})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  for (let p of particles) {
+    const dx = mouse.x - p.x;
+    const dy = mouse.y - p.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 200) {
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.strokeStyle = `rgba(34,211,238,${(1 - dist/200) * 0.25})`;
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    }
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let p of particles) { p.update(); p.draw(); }
+  drawConnections();
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ═══════ CUSTOM CURSOR ═══════
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  cx = e.clientX;
+  cy = e.clientY;
+});
+
+function animateCursor() {
+  rx += (cx - rx) * 0.12;
+  ry += (cy - ry) * 0.12;
+  cursor.style.left = cx - 6 + 'px';
+  cursor.style.top = cy - 6 + 'px';
+  ring.style.left = rx - 22 + 'px';
+  ring.style.top = ry - 22 + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a, button, .tech-card, .svc-card, .proj-card, .why-card, .ai-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+});
+
+// ═══════ SCROLL PROGRESS ═══════
+window.addEventListener('scroll', () => {
+  const p = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+  document.getElementById('scrollProgress').style.transform = `scaleX(${p})`;
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ═══════ MOBILE TOGGLE ═══════
+document.getElementById('mobileToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+// ═══════ SCROLL REVEAL ═══════
+const rObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.rv').forEach(el => rObs.observe(el));
+
+// ═══════ COUNTER ANIMATION ═══════
+const cObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = +el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target / 50));
+    const timer = setInterval(() => {
+      cur += step;
+      if (cur >= target) { cur = target; clearInterval(timer); }
+      el.textContent = cur + suffix;
+    }, 25);
+    cObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num').forEach(el => cObs.observe(el));
+
+// ═══════ SMOOTH ANCHOR ═══════
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); document.getElementById('navLinks').classList.remove('open'); }
+  });
+});
+
+// ═══════ 3D TILT ON CARDS ═══════
+document.querySelectorAll('.tech-card, .proj-card, .ai-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const deg = card.classList.contains('proj-card') ? 4 : 6;
+    card.style.transform = `translateY(-8px) perspective(800px) rotateX(${-y * deg}deg) rotateY(${x * deg}deg)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'all 0.5s cubic-bezier(0.22,1,0.36,1)';
+  });
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'box-shadow 0.5s, border-color 0.5s';
+  });
+});
+
+// ═══════ MAGNETIC BUTTONS ═══════
+document.querySelectorAll('.btn-mag').forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+  });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
+
+// ═══════ TEXT SCRAMBLE ON SECTION LABELS ═══════
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*';
+function scrambleText(el) {
+  const original = el.dataset.original || el.textContent;
+  el.dataset.original = original;
+  let iteration = 0;
+  const interval = setInterval(() => {
+    el.textContent = original.split('').map((char, i) => {
+      if (i < iteration) return original[i];
+      return chars[Math.floor(Math.random() * chars.length)];
+    }).join('');
+    iteration += 0.5;
+    if (iteration >= original.length) clearInterval(interval);
+  }, 30);
+}
+const lObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { scrambleText(e.target); lObs.unobserve(e.target); } });
+}, { threshold: 0.5 });
+document.querySelectorAll('.sec-label').forEach(el => lObs.observe(el));
+
+// ═══════ PARALLAX BLOBS ═══════
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  document.querySelectorAll('.hero-blob').forEach((b, i) => {
+    b.style.transform = `translateY(${y * (0.08 + i * 0.04)}px)`;
+  });
+});
+
+// ═══════ AI TERMINAL TYPING ANIMATION ═══════
+const aiTermLines = document.querySelectorAll('#aiTerminal .ai-term-line');
+const aiTermObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    aiTermLines.forEach((line, i) => {
+      setTimeout(() => line.classList.add('typed'), i * 280);
+    });
+    aiTermObs.unobserve(entry.target);
+  });
+}, { threshold: 0.3 });
+if (document.getElementById('aiTerminal')) {
+  aiTermObs.observe(document.getElementById('aiTerminal'));
+}
+
+// ═══════ NEURAL NETWORK CANVAS ═══════
+const neuralCanvas = document.getElementById('neuralCanvas');
+if (neuralCanvas) {
+  const nCtx = neuralCanvas.getContext('2d');
+  let nNodes = [];
+  
+  function resizeNeural() {
+    const rect = neuralCanvas.parentElement.getBoundingClientRect();
+    neuralCanvas.width = rect.width;
+    neuralCanvas.height = rect.height;
+  }
+  
+  class NeuralNode {
+    constructor(w, h) {
+      this.x = Math.random() * w;
+      this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = (Math.random() - 0.5) * 0.3;
+      this.radius = Math.random() * 2 + 1;
+      this.pulsePhase = Math.random() * Math.PI * 2;
+      const c = ['168,85,247', '34,211,238', '251,191,36', '52,211,153', '244,63,94'];
+      this.color = c[Math.floor(Math.random() * c.length)];
+    }
+    update(w, h) {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.pulsePhase += 0.02;
+      if (this.x < 0 || this.x > w) this.vx *= -1;
+      if (this.y < 0 || this.y > h) this.vy *= -1;
+    }
+    draw(ctx) {
+      const pulse = 0.5 + Math.sin(this.pulsePhase) * 0.5;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius + pulse, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${this.color},${0.4 + pulse * 0.3})`;
+      ctx.fill();
+      // glow
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius * 4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${this.color},${0.03 + pulse * 0.02})`;
+      ctx.fill();
+    }
+  }
+  
+  function initNeural() {
+    resizeNeural();
+    nNodes = [];
+    const count = Math.min(50, Math.floor(neuralCanvas.width * 0.03));
+    for (let i = 0; i < count; i++) {
+      nNodes.push(new NeuralNode(neuralCanvas.width, neuralCanvas.height));
+    }
+  }
+  
+  function drawNeuralConnections() {
+    for (let i = 0; i < nNodes.length; i++) {
+      for (let j = i + 1; j < nNodes.length; j++) {
+        const dx = nNodes[i].x - nNodes[j].x;
+        const dy = nNodes[i].y - nNodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 180) {
+          const alpha = (1 - dist/180) * 0.15;
+          const pulse = Math.sin(nNodes[i].pulsePhase + nNodes[j].pulsePhase) * 0.5 + 0.5;
+          nCtx.beginPath();
+          nCtx.moveTo(nNodes[i].x, nNodes[i].y);
+          nCtx.lineTo(nNodes[j].x, nNodes[j].y);
+          nCtx.strokeStyle = `rgba(168,85,247,${alpha * (0.5 + pulse * 0.5)})`;
+          nCtx.lineWidth = 0.5 + pulse * 0.5;
+          nCtx.stroke();
+          
+          // Traveling data pulse
+          if (dist < 120 && pulse > 0.8) {
+            const t = (Date.now() % 3000) / 3000;
+            const px = nNodes[i].x + (nNodes[j].x - nNodes[i].x) * t;
+            const py = nNodes[i].y + (nNodes[j].y - nNodes[i].y) * t;
+            nCtx.beginPath();
+            nCtx.arc(px, py, 1.5, 0, Math.PI * 2);
+            nCtx.fillStyle = `rgba(34,211,238,${alpha * 2})`;
+            nCtx.fill();
+          }
+        }
+      }
+    }
+  }
+  
+  function animateNeural() {
+    nCtx.clearRect(0, 0, neuralCanvas.width, neuralCanvas.height);
+    for (let n of nNodes) {
+      n.update(neuralCanvas.width, neuralCanvas.height);
+      n.draw(nCtx);
+    }
+    drawNeuralConnections();
+    requestAnimationFrame(animateNeural);
+  }
+  
+  initNeural();
+  animateNeural();
+  window.addEventListener('resize', initNeural);
+}
+</script>
+</body>
+</html>
