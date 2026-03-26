@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scaled Factorial Product — AI Dev Agency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gruppo&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -29,7 +29,7 @@
   --green: #34d399;
   --orange: #fb923c;
   --white-g: rgba(255,255,255,0.06);
-  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-display: 'Gruppo', sans-serif;
   --font-mono: 'DM Mono', monospace;
   --font-body: 'Instrument Sans', sans-serif;
 }
@@ -1504,7 +1504,210 @@ footer {
   .cta-actions { align-items: center; }
   .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
 }
+
+/* ═══════ LIGHT THEME ═══════ */
+[data-theme="light"] {
+  --bg: #f7f7fc;
+  --bg2: #ededf7;
+  --bg3: #e4e4f0;
+  --surface: #dcdcec;
+  --border: #cccce4;
+  --border-h: #a0a0cc;
+  --text: #1a1a2e;
+  --dim: #52527a;
+  --muted: #9090b8;
+  --white-g: rgba(0,0,0,0.04);
+  --elixir: #1e40af;
+  --elixir-g: rgba(30,64,175,0.2);
+  --ruby-g: rgba(244,63,94,0.2);
+  --cyan-g: rgba(34,211,238,0.18);
+}
+
+[data-theme="light"] nav {
+  background: rgba(247,247,252,0.88);
+  border-bottom-color: rgba(26,26,46,0.08);
+}
+[data-theme="light"] nav.scrolled { background: rgba(247,247,252,0.97); }
+
+[data-theme="light"] .marquee-wrap {
+  background: rgba(237,237,247,0.8);
+  border-top-color: rgba(26,26,46,0.05);
+  border-bottom-color: rgba(26,26,46,0.05);
+}
+[data-theme="light"] .stats-section { border-bottom-color: rgba(26,26,46,0.06); }
+[data-theme="light"] .stats-grid { background: rgba(26,26,46,0.05); }
+[data-theme="light"] .services-section {
+  border-top-color: rgba(26,26,46,0.06);
+  border-bottom-color: rgba(26,26,46,0.06);
+}
+[data-theme="light"] footer { border-top-color: rgba(26,26,46,0.06); }
+
+[data-theme="light"] .tech-card:hover,
+[data-theme="light"] .ai-card:hover { box-shadow: 0 30px 80px rgba(26,26,46,0.1); }
+[data-theme="light"] .svc-card:hover { box-shadow: 0 25px 60px rgba(26,26,46,0.1); }
+[data-theme="light"] .proj-card:hover { box-shadow: 0 40px 100px rgba(26,26,46,0.12), 0 0 60px rgba(168,85,247,0.04); }
+
+@media (max-width: 700px) {
+  [data-theme="light"] .nav-links { background: rgba(247,247,252,0.98); }
+}
+
+/* Light theme: cursor visible on pale background */
+[data-theme="light"] .cursor {
+  background: #1e40af;
+  mix-blend-mode: normal;
+  box-shadow: 0 0 0 1.5px rgba(30,64,175,0.2);
+}
+[data-theme="light"] .cursor-ring {
+  border-color: rgba(30,64,175,0.35);
+}
+[data-theme="light"] .cursor.hover {
+  background: rgba(30,64,175,0.15);
+  box-shadow: none;
+}
+[data-theme="light"] .cursor-ring.hover { border-color: #1e40af; }
+
+/* Light theme: stronger navy gradient for titles */
+[data-theme="light"] .gradient-text {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #0369a1 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 5s ease infinite;
+}
+
+/* Light theme: fix hardcoded purple in buttons & badges */
+[data-theme="light"] .nav-cta {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  box-shadow: 0 0 30px rgba(30,64,175,0.25);
+}
+[data-theme="light"] .nav-cta:hover { box-shadow: 0 0 50px rgba(30,64,175,0.35); }
+[data-theme="light"] .btn-primary-mag {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  box-shadow: 0 4px 40px rgba(30,64,175,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+[data-theme="light"] .btn-primary-mag::before {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+[data-theme="light"] .btn-primary-mag:hover { box-shadow: 0 8px 60px rgba(30,64,175,0.3); }
+[data-theme="light"] .hero-badge {
+  background: rgba(30,64,175,0.06);
+  border-color: rgba(30,64,175,0.2);
+}
+
+/* ── Cards: white surface + shadow to lift off the page ── */
+[data-theme="light"] .tech-card,
+[data-theme="light"] .ai-card,
+[data-theme="light"] .svc-card,
+[data-theme="light"] .proj-card {
+  background: #ffffff;
+  border-color: #d4d4e6;
+  box-shadow: 0 2px 12px rgba(26,26,46,0.07), 0 1px 3px rgba(26,26,46,0.04);
+}
+[data-theme="light"] .tech-card:hover,
+[data-theme="light"] .ai-card:hover {
+  box-shadow: 0 20px 60px rgba(26,26,46,0.13), 0 4px 14px rgba(26,26,46,0.07);
+  border-color: #a0a0cc;
+}
+[data-theme="light"] .svc-card:hover {
+  box-shadow: 0 16px 50px rgba(26,26,46,0.13), 0 4px 14px rgba(26,26,46,0.07);
+  border-color: #a0a0cc;
+}
+[data-theme="light"] .proj-card:hover {
+  box-shadow: 0 30px 80px rgba(26,26,46,0.14), 0 0 40px rgba(30,64,175,0.06);
+  border-color: #a0a0cc;
+}
+
+/* ── Tech card icon wraps: use correct tints per card ── */
+[data-theme="light"] .card-elixir .tech-icon-wrap { background: rgba(30,64,175,0.1); }
+[data-theme="light"] .card-ruby   .tech-icon-wrap { background: rgba(220,38,38,0.09); }
+[data-theme="light"] .card-rn     .tech-icon-wrap { background: rgba(2,132,199,0.1); }
+
+/* ── AI card icon wraps ── */
+[data-theme="light"] .ai-card:nth-child(1) .ai-card-icon { background: rgba(30,64,175,0.1); }
+[data-theme="light"] .ai-card:nth-child(2) .ai-card-icon { background: rgba(2,132,199,0.1); }
+[data-theme="light"] .ai-card:nth-child(3) .ai-card-icon { background: rgba(146,64,14,0.09); }
+[data-theme="light"] .ai-card:nth-child(4) .ai-card-icon { background: rgba(4,120,87,0.09); }
+
+/* ── Why cards ── */
+[data-theme="light"] .why-card:hover {
+  background: #ffffff;
+  border-color: #d4d4e6;
+  box-shadow: 0 8px 32px rgba(26,26,46,0.09);
+}
+[data-theme="light"] .why-num {
+  background: rgba(30,64,175,0.08);
+  border-color: rgba(30,64,175,0.18);
+}
+[data-theme="light"] .why-card:hover .why-num {
+  background: rgba(30,64,175,0.14);
+  box-shadow: 0 0 24px rgba(30,64,175,0.15);
+}
+
+/* ── Tags: fix light-purple & invisible colors on white ── */
+[data-theme="light"] .t-elixir  { color: #1e40af; border-color: rgba(30,64,175,0.28); background: rgba(30,64,175,0.06); }
+[data-theme="light"] .t-liveview { color: #4338ca; border-color: rgba(67,56,202,0.25); background: rgba(67,56,202,0.06); }
+[data-theme="light"] .t-rn      { color: #3730a3; border-color: rgba(55,48,163,0.25); background: rgba(55,48,163,0.06); }
+[data-theme="light"] .t-rails   { color: #b91c1c; border-color: rgba(185,28,28,0.25); background: rgba(185,28,28,0.06); }
+[data-theme="light"] .t-ruby    { color: #be123c; border-color: rgba(190,18,60,0.25); background: rgba(190,18,60,0.06); }
+[data-theme="light"] .t-hotwire { color: #c2410c; border-color: rgba(194,65,12,0.25); background: rgba(194,65,12,0.06); }
+[data-theme="light"] .t-stimulus { color: #047857; border-color: rgba(4,120,87,0.25); background: rgba(4,120,87,0.06); }
+[data-theme="light"] .t-react   { color: #0369a1; border-color: rgba(3,105,161,0.25); background: rgba(3,105,161,0.06); }
+[data-theme="light"] .t-phoenix { color: #b45309; border-color: rgba(180,83,9,0.25); background: rgba(180,83,9,0.06); }
+
+/* AI tags */
+[data-theme="light"] .ai-tag.t-api   { color: #1e40af; border-color: rgba(30,64,175,0.25); background: rgba(30,64,175,0.06); }
+[data-theme="light"] .ai-tag.t-agent { color: #0369a1; border-color: rgba(3,105,161,0.25); background: rgba(3,105,161,0.06); }
+[data-theme="light"] .ai-tag.t-mcp   { color: #b45309; border-color: rgba(180,83,9,0.25); background: rgba(180,83,9,0.06); }
+[data-theme="light"] .ai-tag.t-skill { color: #047857; border-color: rgba(4,120,87,0.25); background: rgba(4,120,87,0.06); }
+[data-theme="light"] .ai-tag.t-llm   { color: #be123c; border-color: rgba(190,18,60,0.25); background: rgba(190,18,60,0.06); }
+[data-theme="light"] .ai-tag.t-rag   { color: #c2410c; border-color: rgba(194,65,12,0.25); background: rgba(194,65,12,0.06); }
+
+/* Code windows: deeper + higher-contrast in light theme */
+[data-theme="light"] .code-window {
+  background: #07070f;
+  border-color: rgba(0,0,0,0.55);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 0 0 1px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+[data-theme="light"] .ai-terminal {
+  background: #07070f;
+  border-color: rgba(0,0,0,0.55);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 0 0 1px rgba(0,0,0,0.45), 0 0 80px rgba(30,64,175,0.08);
+}
+
+/* ═══════ THEME TOGGLE BUTTON ═══════ */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  transition: all 0.3s;
+  padding: 0;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.theme-toggle:hover {
+  border-color: var(--border-h);
+  color: var(--text);
+  background: var(--white-g);
+  transform: rotate(15deg);
+}
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 </style>
+<script>
+(function(){
+  function getCookie(n){var m=document.cookie.match(new RegExp('(?:^|;\\s*)'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):null;}
+  var t=getCookie('sfp_theme')||'light';
+  document.documentElement.setAttribute('data-theme',t);
+})();
+</script>
 </head>
 <body>
 
@@ -1529,6 +1732,10 @@ footer {
     <li><a href="#why">Why Us</a></li>
     <li><a href="#contact" class="nav-cta">Start a Project →</a></li>
   </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
 </nav>
 
 <section class="hero" id="hero">
@@ -2138,6 +2345,10 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
+const lightColors = ['30,64,175', '2,132,199', '185,28,28', '146,64,14'];
+const darkColors  = ['168,85,247', '34,211,238', '244,63,94', '251,191,36'];
+function isLight() { return document.documentElement.getAttribute('data-theme') === 'light'; }
+
 class Particle {
   constructor() {
     this.x = Math.random() * canvas.width;
@@ -2147,8 +2358,8 @@ class Particle {
     this.radius = Math.random() * 1.5 + 0.5;
     this.baseAlpha = Math.random() * 0.4 + 0.1;
     this.alpha = this.baseAlpha;
-    const colors = ['168,85,247', '34,211,238', '244,63,94', '251,191,36'];
-    this.color = colors[Math.floor(Math.random() * colors.length)];
+    this.colorIdx = Math.floor(Math.random() * darkColors.length);
+    this.color = darkColors[this.colorIdx];
   }
   update() {
     const dx = mouse.x - this.x;
@@ -2172,9 +2383,12 @@ class Particle {
     if (this.y > canvas.height) this.y = 0;
   }
   draw() {
+    const light = isLight();
+    const col = light ? lightColors[this.colorIdx] : darkColors[this.colorIdx];
+    const a = light ? Math.min(1, this.alpha * 3.5) : this.alpha;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+    ctx.arc(this.x, this.y, light ? this.radius * 1.3 : this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${col},${a})`;
     ctx.fill();
   }
 }
@@ -2183,6 +2397,11 @@ const pCount = Math.min(120, Math.floor(window.innerWidth * 0.08));
 for (let i = 0; i < pCount; i++) particles.push(new Particle());
 
 function drawConnections() {
+  const light = isLight();
+  const lineColor  = light ? '30,64,175'  : '168,85,247';
+  const mouseColor = light ? '2,132,199'  : '34,211,238';
+  const lineAlpha  = light ? 0.38 : 0.12;
+  const mouseAlpha = light ? 0.55 : 0.25;
   for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
       const dx = particles[i].x - particles[j].x;
@@ -2192,8 +2411,8 @@ function drawConnections() {
         ctx.beginPath();
         ctx.moveTo(particles[i].x, particles[i].y);
         ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(168,85,247,${(1 - dist/150) * 0.12})`;
-        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = `rgba(${lineColor},${(1 - dist/150) * lineAlpha})`;
+        ctx.lineWidth = light ? 0.8 : 0.5;
         ctx.stroke();
       }
     }
@@ -2206,8 +2425,8 @@ function drawConnections() {
       ctx.beginPath();
       ctx.moveTo(p.x, p.y);
       ctx.lineTo(mouse.x, mouse.y);
-      ctx.strokeStyle = `rgba(34,211,238,${(1 - dist/200) * 0.25})`;
-      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = `rgba(${mouseColor},${(1 - dist/200) * mouseAlpha})`;
+      ctx.lineWidth = light ? 0.9 : 0.6;
       ctx.stroke();
     }
   }
@@ -2259,6 +2478,16 @@ window.addEventListener('scroll', () => {
 // ═══════ MOBILE TOGGLE ═══════
 document.getElementById('mobileToggle').addEventListener('click', () => {
   document.getElementById('navLinks').classList.toggle('open');
+});
+
+// ═══════ THEME TOGGLE ═══════
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const next = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
+  document.cookie = 'sfp_theme=' + next + ';path=/;expires=' + expires + ';SameSite=Lax';
 });
 
 // ═══════ SCROLL REVEAL ═══════
